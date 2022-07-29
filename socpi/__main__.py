@@ -1,6 +1,4 @@
-from socpi.client import Client
-from .app import App
-from socpi import get_path_in_run
+from socpi import App, Client, get_path_in_run
 import asyncio
 import logging
 
@@ -22,11 +20,18 @@ if __name__ == "__main__":
     def foo(arg: str):
         return arg
 
+    @app.register
+    async def bar():
+        await asyncio.sleep(1)
+        return 'done'
+
     loop = asyncio.get_event_loop()
     if args.mode == "client":
         client = Client(app)
         async def test():
             out = await client.foo('test')
+            print(out)
+            out = await client.bar()
             print(out)
         loop.run_until_complete(test())
     elif args.mode == "server":

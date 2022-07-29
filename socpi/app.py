@@ -21,6 +21,8 @@ class App:
             logging.info(f"Connection to {request_repr(request)}")
             endpoint = self.endpoints[request.endpoint]
             result = endpoint(*request.args, **request.kwargs)
+            if asyncio.iscoroutine(result):
+                result = await result
             writer.write(encode(result))
             writer.write_eof()
             await writer.drain()
