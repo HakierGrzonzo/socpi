@@ -2,7 +2,11 @@ from socpi import App, Client, get_path_in_run
 import asyncio
 import logging
 
+
 async def print_generator(gen, rep):
+    """
+    A utility function to print every value from an async generator
+    """
     try:
         async for x in gen:
             print(rep, x)
@@ -14,13 +18,19 @@ async def print_generator(gen, rep):
 logging.basicConfig(level=logging.DEBUG)
 
 if __name__ == "__main__":
+    # import and setup an argument parser to decide if we are a server or 
+    # a client
     import argparse
 
     parser = argparse.ArgumentParser(description="A pickled socket library")
     parser.add_argument("mode", type=str)
     args = parser.parse_args()
 
+    # setup application as a unix server listening at a socket in
+    # /run/$your_uid/test
     app = App(get_path_in_run("test"))
+
+    # register endpoints for the application
 
     @app.register
     def foo(arg: str):
@@ -30,6 +40,7 @@ if __name__ == "__main__":
     @app.register
     async def bar():
         """A sleeping function"""
+        print("hello from the other side")
         await asyncio.sleep(1)
         return "done"
 
@@ -55,9 +66,13 @@ if __name__ == "__main__":
         raise Exception("foo")
 
     if args.mode == "client":
+        # if we are a client, setup some test function
         client = Client(app)
 
         async def test():
+            """
+            Calls all the methods on a server
+            """
             print(
                 await asyncio.gather(
                     client.foo("test"),
@@ -68,13 +83,16 @@ if __name__ == "__main__":
                 await client.failer()
             except Exception as e:
                 print(e)
-            
+
             # print values in generators with delays
             await asyncio.gather(
                 print_generator(client.generator(0, 10), client.generator),
-                print_generator(client.async_generator(), client.async_generator),
+                print_generator(
+                    client.async_generator(), client.async_generator
+                ),
             )
 
         asyncio.run(test())
     elif args.mode == "server":
+        # run server
         asyncio.run(app.run())

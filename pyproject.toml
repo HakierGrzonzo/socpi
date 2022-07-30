@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "socpi"
-version = "0.1.0"
+version = "0.2.0"
 description = "A socket api framework"
 authors = ["Grzegorz Koperwas <admin@grzegorzkoperwas.site>"]
 license = "GPL"
