@@ -1,9 +1,18 @@
 [tool.poetry]
 name = "socpi"
-version = "0.2.0"
-description = "A socket api framework"
+version = "0.2.1"
+description = "A simple socket api framework"
 authors = ["Grzegorz Koperwas <admin@grzegorzkoperwas.site>"]
-license = "GPL"
+readme = "README.md"
+repository = "https://github.com/HakierGrzonzo/socpi"
+keywords = ["sockets", "asyncio"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: Unix"
+]
+license = "GPLv2"
 
 [tool.poetry.dependencies]
 python = "^3.10"
